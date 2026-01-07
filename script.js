@@ -5,8 +5,8 @@ const paintings = {
     A: { 
         title: "La Chasse aux Lions", 
         img: "images/delacroix.jpg", 
-        clue: "Je suis unex scène violente et tourbillonnante. Cherchez des fauves et des turbans.",
-        code: "CHASSE24" // Le code affiché physiquement à côté du tableau
+        clue: "Je suis une scène violente et tourbillonnante. Cherchez des fauves et des turbans.",
+        code: "CHASSE24" 
     },
     B: { 
         title: "Rolla", 
@@ -14,7 +14,18 @@ const paintings = {
         clue: "Cherchez un balcon, une lumière blanche et une scène intime au saut du lit.",
         code: "ROLLA33" 
     },
-    // ... C et D
+    C: { 
+        title: "Martyre de Saint Georges", 
+        img: "images/rubens.jpg", 
+        clue: "Cherchez un cheval blanc, un dragon et une scène héroïque.",
+        code: "RUBENS10" // Code à inventer
+    },
+    D: { 
+        title: "Portrait de Mme de Sorquainville", 
+        img: "images/sorquainville.jpg", 
+        clue: "Cherchez le calme, une robe soyeuse et un regard mystérieux.",
+        code: "MME78" // Code à inventer
+    }
 };
 
 let calculatedResult = null; // On stocke le résultat ici en attendant la validation
