@@ -177,3 +177,17 @@ function updateFirebaseStats(paintingID) {
         document.getElementById('global-stats').innerHTML = htmlContent;
     });
 }
+// On écoute l'état de la connexion
+const connectedRef = db.ref(".info/connected");
+const conListRef = db.ref("connections"); // Le dossier où on stocke les présents
+const myConRef = conListRef.push(); // On crée une place pour cet utilisateur
+
+connectedRef.on("value", (snap) => {
+if (snap.val() === true) {
+    // Si on est connecté, on s'ajoute à la liste
+    myConRef.set(true);
+    
+    // Si on se déconnecte (fermeture de page), on s'enlève automatiquement
+    myConRef.onDisconnect().remove();
+}
+});

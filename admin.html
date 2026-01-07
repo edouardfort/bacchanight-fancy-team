@@ -90,6 +90,12 @@
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database-compat.js"></script>
 
+    <div class="card" style="border-color: #d4af37;">
+        <h3>En direct 🟢</h3>
+        <div id="online-count" class="big-number">0</div>
+        <p>Visiteurs connectés maintenant</p>
+    </div>
+
     <script>
         // 1. CONFIGURATION (Copiez exactement la même que dans index.html)
         const firebaseConfig = {
@@ -151,6 +157,16 @@
 
             document.getElementById('stats-list').innerHTML = htmlHTML;
         });
+
+        // ... suite du code existant ...
+
+// 4. ÉCOUTE DES VISITEURS EN LIGNE
+const connectionsRef = db.ref("connections");
+
+connectionsRef.on("value", (snap) => {
+    // snap.numChildren() compte combien d'entrées il y a dans la liste
+    document.getElementById('online-count').innerText = snap.numChildren();
+});
     </script>
 </body>
 </html>
