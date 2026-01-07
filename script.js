@@ -1,20 +1,11 @@
 // --- CONFIGURATION ---
 
-// Les 4 tableaux possibles (Profils)
-const paintings = {
-    A: { title: "La Chasse aux Lions (Delacroix)", img: "url_image_A.jpg", count: 0 },
-    B: { title: "Rolla (Gervex)", img: "url_image_B.jpg", count: 0 },
-    C: { title: "Martyre de Saint Georges (Rubens)", img: "url_image_C.jpg", count: 0 },
-    D: { title: "Portrait de Mme de Sorquainville", img: "url_image_D.jpg", count: 0 }
-};
-
-
 // script.js - Configuration
 const paintings = {
     A: { 
         title: "La Chasse aux Lions", 
         img: "images/delacroix.jpg", 
-        clue: "Je suis une scène violente et tourbillonnante. Cherchez des fauves et des turbans.",
+        clue: "Je suis unex scène violente et tourbillonnante. Cherchez des fauves et des turbans.",
         code: "CHASSE24" // Le code affiché physiquement à côté du tableau
     },
     B: { 
