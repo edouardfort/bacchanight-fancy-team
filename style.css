@@ -1,0 +1,57 @@
+body {
+    font-family: 'Helvetica Neue', sans-serif;
+    background-color: #1a1a1a; /* Fond sombre pour l'ambiance nuit */
+    color: #f0f0f0;
+    text-align: center;
+    padding: 20px;
+}
+
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+    background: #2c2c2c;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+}
+
+.screen {
+    display: none; /* Cache tout par défaut */
+}
+
+.screen.active {
+    display: block; /* Affiche l'écran actif */
+}
+
+button {
+    background-color: #d4af37; /* Or pour le côté musée */
+    color: #1a1a1a;
+    border: none;
+    padding: 15px 30px;
+    font-size: 1.1em;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-top: 20px;
+    width: 100%;
+    transition: transform 0.2s;
+}
+
+button:hover {
+    transform: scale(1.02);
+    background-color: #c5a028;
+}
+
+.painting-reveal {
+    max-width: 100%;
+    border: 5px solid #d4af37;
+    margin: 20px 0;
+    border-radius: 4px;
+}
+
+.stats-box {
+    background: #383838;
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 20px;
+    text-align: left;
+}
