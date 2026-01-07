@@ -22,11 +22,27 @@
             <p>Question <span id="current-q">1</span> / 10</p>
         </div>
 
+        <div id="clue-screen" class="screen">
+            <h2>À vous de jouer !</h2>
+            <p>D'après vos réponses, votre tableau totem se cache dans la salle...</p>
+            
+            <div class="clue-box">
+                <h3>Votre Indice :</h3>
+                <p id="clue-text" style="font-style: italic; color: #d4af37;">...</p>
+            </div>
+        
+            <p>Trouvez le tableau et entrez le code inscrit sur son cartel :</p>
+            
+            <input type="text" id="player-code" placeholder="Code (ex: LION)" maxlength="10">
+            <button onclick="checkCode()">Valider</button>
+            
+            <p id="error-msg" class="error-hidden">Ce code est incorrect.</p>
+        </div>
+
         <div id="result" class="screen">
             <h2>Vous êtes...</h2>
-            <img id="result-img" src="" alt="Tableau résultat" class="painting-reveal">
             <h3 id="result-title">Titre du Tableau</h3>
-            <p id="result-desc">Description de la personnalité liée au tableau.</p>
+            <p id="result-desc">Félicitations, vous avez trouvé votre alter ego artistique.</p>
             
             <hr>
             
@@ -41,44 +57,25 @@
         </div>
     </div>
 
-    <div id="clue-screen" class="screen">
-        <h2>À vous de jouer !</h2>
-        <p>D'après vos réponses, votre tableau totem se cache dans la salle...</p>
-        
-        <div class="clue-box">
-            <h3>Votre Indice :</h3>
-            <p id="clue-text" style="font-style: italic; color: #d4af37;">...</p>
-        </div>
-    
-        <p>Trouvez le tableau et entrez le code inscrit sur son cartel :</p>
-        
-        <input type="text" id="player-code" placeholder="Entrez le code ici (ex: LION)" style="padding: 10px; font-size: 16px;">
-        <button onclick="checkCode()">Valider</button>
-        
-        <p id="error-msg" style="color: red; display: none;">Ce n'est pas le bon code (ou pas le bon tableau) !</p>
-    </div>
-
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database-compat.js"></script>
 
-<script>
-  // VOTRE CONFIGURATION FIREBASE (À copier depuis la console Firebase)
-  // Allez dans Paramètres du projet (roue dentée) > Général > Vos applications > </> (Web)
-const firebaseConfig = {
-    apiKey: "AIzaSyB...", // Remplacez par VOTRE clé
-    authDomain: "bacchanight-fancy.firebaseapp.com",
-    databaseURL: "https://bacchanight-fancy-default-rtdb.europe-west1.firebasedatabase.app/", // L'URL de votre base
-    projectId: "bacchanight-fancy",
-    storageBucket: "bacchanight-fancy.appspot.com",
-    messagingSenderId: "...",
-    appId: "..."
-};
-
-  // Initialiser Firebase
-firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
-</script>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyB...", // REMPLACEZ PAR VOTRE CLÉ
+            authDomain: "bacchanight-fancy.firebaseapp.com",
+            databaseURL: "https://bacchanight-fancy-default-rtdb.europe-west1.firebasedatabase.app/",
+            projectId: "bacchanight-fancy",
+            storageBucket: "bacchanight-fancy.appspot.com",
+            messagingSenderId: "...",
+            appId: "..."
+        };
+        
+        // Initialisation globale pour que script.js puisse l'utiliser
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+    </script>
 
     <script src="script.js"></script>
-    </body>
+</body>
 </html>

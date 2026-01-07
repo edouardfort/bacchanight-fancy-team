@@ -1,50 +1,46 @@
-// --- CONFIGURATION ---
+/* =========================================
+   1. DONNÉES ET CONFIGURATION
+   ========================================= */
 
-// script.js - Configuration
-const paintings = {
+   const paintings = {
     A: { 
-        title: "La Chasse aux Lions", 
+        title: "La Chasse aux Lions (Delacroix)", 
         img: "images/delacroix.jpg", 
         clue: "Je suis une scène violente et tourbillonnante. Cherchez des fauves et des turbans.",
         code: "CHASSE24" 
     },
     B: { 
-        title: "Rolla", 
+        title: "Rolla (Gervex)", 
         img: "images/gervex.jpg", 
         clue: "Cherchez un balcon, une lumière blanche et une scène intime au saut du lit.",
         code: "ROLLA33" 
     },
     C: { 
-        title: "Martyre de Saint Georges", 
+        title: "Martyre de Saint Georges (Rubens)", 
         img: "images/rubens.jpg", 
         clue: "Cherchez un cheval blanc, un dragon et une scène héroïque.",
-        code: "RUBENS10" // Code à inventer
+        code: "RUBENS10"
     },
     D: { 
         title: "Portrait de Mme de Sorquainville", 
         img: "images/sorquainville.jpg", 
         clue: "Cherchez le calme, une robe soyeuse et un regard mystérieux.",
-        code: "MME78" // Code à inventer
+        code: "MME78"
     }
 };
 
-let calculatedResult = null; // On stocke le résultat ici en attendant la validation
-
-// Les questions
-// Chaque réponse donne 1 point à un tableau (A, B, C ou D)
 const questions = [
     {
         text: "Dans une soirée, vous êtes plutôt...",
         options: [
-            { text: "Au centre de l'attention, bruyant", type: "A" }, // Delacroix (Action)
-            { text: "En train de discuter philosophie dans un coin", type: "D" }, // Calme
-            { text: "Dramatique, vous vivez tout intensément", type: "B" }, // Romantique
-            { text: "Héroïque, prêt à défendre vos amis", type: "C" } // Rubens
+            { text: "Au centre de l'attention, bruyant", type: "A" },
+            { text: "En train de discuter philosophie", type: "D" },
+            { text: "Dramatique, tout est intense", type: "B" },
+            { text: "Héroïque, protecteur", type: "C" }
         ]
     },
-    // ... Ajoutez vos 10 questions ici
     {
-        text: "Votre couleur préférée parmi celles-ci ?",
+        text: "Votre couleur préférée ?",
         options: [
             { text: "Rouge sang", type: "A" },
             { text: "Bleu pastel", type: "D" },
@@ -52,142 +48,162 @@ const questions = [
             { text: "Or éclatant", type: "C" }
         ]
     }
+    // Ajoutez vos autres questions ici...
 ];
 
+// --- VARIABLES D'ÉTAT ---
 let currentQuestion = 0;
 let scores = { A: 0, B: 0, C: 0, D: 0 };
+let calculatedResult = null; // Stocke la lettre gagnante (ex: "A")
 
-// --- FONCTIONS ---
+/* =========================================
+   2. LOGIQUE DU QUIZ
+   ========================================= */
 
 function startQuiz() {
-    document.getElementById('intro').classList.remove('active');
-    document.getElementById('quiz').classList.add('active');
+    switchScreen('intro', 'quiz');
     showQuestion();
 }
 
 function showQuestion() {
+    // Sécurité : si on dépasse le nombre de questions
+    if (currentQuestion >= questions.length) {
+        calculateAndShowClue();
+        return;
+    }
+
     let q = questions[currentQuestion];
     document.getElementById('question-text').textContent = q.text;
     document.getElementById('current-q').textContent = currentQuestion + 1;
     
     let optsDiv = document.getElementById('options');
-    optsDiv.innerHTML = ""; // Vider les anciennes options
+    optsDiv.innerHTML = ""; // Nettoyage
     
     q.options.forEach(opt => {
         let btn = document.createElement('button');
         btn.textContent = opt.text;
-        btn.onclick = () => selectOption(opt.type);
+        // Animation au clic
+        btn.onclick = () => {
+            selectOption(opt.type);
+        };
         optsDiv.appendChild(btn);
     });
 }
 
 function selectOption(type) {
-    scores[type]++; // Ajouter 1 point au tableau correspondant
+    if (scores[type] !== undefined) {
+        scores[type]++;
+    }
     currentQuestion++;
     
     if (currentQuestion < questions.length) {
         showQuestion();
     } else {
-        showResult();
+        calculateAndShowClue();
     }
 }
 
-function showResult() {
-    // 1. Calculer le gagnant
-    let winnerKey = Object.keys(scores).reduce((a, b) => scores[a] > scores[b] ? a : b);
-    calculatedResult = winnerKey; // On sauvegarde le résultat (ex: "A")
+function switchScreen(fromId, toId) {
+    document.getElementById(fromId).classList.remove('active');
+    document.getElementById(toId).classList.add('active');
+}
+
+/* =========================================
+   3. RÉSULTATS ET INDICES
+   ========================================= */
+
+function calculateAndShowClue() {
+    // Trouve le score le plus élevé
+    // En cas d'égalité, le premier trouvé gagne (A > B > C > D)
+    let winnerKey = Object.keys(scores).reduce((a, b) => scores[a] >= scores[b] ? a : b);
     
-    // 2. Afficher l'écran d'indice (PAS ENCORE le résultat final)
-    document.getElementById('quiz').classList.remove('active');
-    document.getElementById('clue-screen').classList.add('active');
+    // SÉCURITÉ : Vérifie que le gagnant existe bien dans la liste 'paintings'
+    if (!paintings[winnerKey]) {
+        console.error("Erreur critique : Gagnant " + winnerKey + " non trouvé.");
+        winnerKey = "A"; // Fallback par défaut pour éviter le crash
+    }
+
+    calculatedResult = winnerKey;
     
-    // 3. Remplir l'indice
+    // Affichage de l'indice
+    switchScreen('quiz', 'clue-screen');
     document.getElementById('clue-text').textContent = paintings[winnerKey].clue;
 }
 
-function updateStats(winnerKey) {
-    // Simulation pour l'instant (car pas de Backend connecté)
-    console.log("Gagnant : " + winnerKey);
-    // TODO: Connecter Firebase ici pour incrémenter le compteur du tableau gagnant
-    
-    // Exemple d'affichage simulé
-    document.getElementById('global-stats').innerHTML = `
-        <li>Tableau A : 12 joueurs</li>
-        <li>Tableau B : 8 joueurs</li>
-        <li>Tableau C : <b>${winnerKey === 'C' ? '(Vous) ' : ''}</b> 5 joueurs</li>
-        <li>Tableau D : 20 joueurs</li>
-    `;
-}
-
 function checkCode() {
-    let input = document.getElementById('player-code').value.toUpperCase().trim();
-    let correctCode = paintings[calculatedResult].code;
+    const input = document.getElementById('player-code');
+    const errorMsg = document.getElementById('error-msg');
+    const userCode = input.value.toUpperCase().trim();
+    const correctCode = paintings[calculatedResult].code;
 
-    if (input === correctCode) {
-        // C'est gagné !
+    if (userCode === correctCode) {
         revealFinalScreen();
     } else {
-        // Erreur
-        document.getElementById('error-msg').style.display = 'block';
-        document.getElementById('error-msg').textContent = "Code incorrect. Avez-vous trouvé le bon tableau ?";
+        errorMsg.style.display = 'block';
+        input.classList.add('shake'); // Ajoute un petit effet visuel si vous le mettez en CSS
+        setTimeout(() => input.classList.remove('shake'), 500);
     }
 }
 
 function revealFinalScreen() {
     let resultData = paintings[calculatedResult];
     
-    document.getElementById('clue-screen').classList.remove('active');
-    document.getElementById('result').classList.add('active');
+    switchScreen('clue-screen', 'result');
     
     document.getElementById('result-title').textContent = resultData.title;
-    // document.getElementById('result-img').src = resultData.img;
+    // document.getElementById('result-img').src = resultData.img; // Activer si image dispo
 
-    // C'est SEULEMENT maintenant qu'on envoie la stat à la base de données
+    // Envoi à la base de données
     updateFirebaseStats(calculatedResult);
 }
 
+/* =========================================
+   4. INTERACTION FIREBASE
+   ========================================= */
+
 function updateFirebaseStats(paintingID) {
+    if (!db) return; // Sécurité si Firebase n'a pas chargé
+
     const statsRef = db.ref('stats');
     
-    // 1. Incrémenter le compteur du tableau gagnant de manière atomique (sécurisé)
-    // Cela évite les bugs si 2 personnes finissent en même temps
+    // 1. Incrémenter le compteur
     statsRef.child(paintingID).set(firebase.database.ServerValue.increment(1));
 
-    // 2. Écouter les mises à jour pour afficher les stats globales
-    // .once('value') lit une seule fois. .on('value') mettrait à jour en temps réel si d'autres jouent.
+    // 2. Lire les stats pour affichage
     statsRef.once('value').then((snapshot) => {
-        const data = snapshot.val() || { A:0, B:0, C:0, D:0 }; // Valeurs par défaut
-        
-        // Calcul du total de joueurs
+        const data = snapshot.val() || { A:0, B:0, C:0, D:0 };
         let total = (data.A || 0) + (data.B || 0) + (data.C || 0) + (data.D || 0);
         
-        // Affichage dans le HTML
         let htmlContent = "";
         
-        // On boucle sur nos tableaux (A, B, C, D)
         for (let key in paintings) {
             let count = data[key] || 0;
             let percent = total > 0 ? Math.round((count / total) * 100) : 0;
             
-            // Mise en forme
-            let isUser = (key === paintingID) ? "style='font-weight:bold; color:#d4af37;'" : "";
-            htmlContent += `<li ${isUser}>${paintings[key].title} : ${count} joueurs (${percent}%)</li>`;
+            let highlight = (key === paintingID) ? "style='font-weight:bold; color:#d4af37;'" : "";
+            
+            htmlContent += `
+                <li ${highlight}>
+                    ${paintings[key].title} : ${percent}% 
+                    <small>(${count})</small>
+                </li>`;
         }
         
         document.getElementById('global-stats').innerHTML = htmlContent;
     });
 }
-// On écoute l'état de la connexion
-const connectedRef = db.ref(".info/connected");
-const conListRef = db.ref("connections"); // Le dossier où on stocke les présents
-const myConRef = conListRef.push(); // On crée une place pour cet utilisateur
 
-connectedRef.on("value", (snap) => {
-if (snap.val() === true) {
-    // Si on est connecté, on s'ajoute à la liste
-    myConRef.set(true);
-    
-    // Si on se déconnecte (fermeture de page), on s'enlève automatiquement
-    myConRef.onDisconnect().remove();
+// GESTION "EN LIGNE" (Présence)
+// S'exécute automatiquement au chargement du script
+if (db) {
+    const connectedRef = db.ref(".info/connected");
+    const conListRef = db.ref("connections");
+    const myConRef = conListRef.push();
+
+    connectedRef.on("value", (snap) => {
+        if (snap.val() === true) {
+            myConRef.set(true);
+            myConRef.onDisconnect().remove();
+        }
+    });
 }
-});
